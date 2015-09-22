@@ -1,22 +1,21 @@
+require 'csv'
 # Pseudocode
   # Notes:
-    # Actually rethinking the giant hash.  Matt S. sent me the starting test that Josh gave them, here:
-      # class TestLoadingDistricts < Minitest::Test
-        #   def test_it_can_load_a_district_from_csv_data
-        #     dr = DistrictRepository.from_csv(data_dir)
-        #     district = dr.find_by_name("ACADEMY 20")
-        # ​
-        #     assert_equal 22620, district.enrollment.in_year(2009)
-        #     assert_equal 0.895, district.enrollment.graduation_rate.for_high_school_in_year(2010)
-        #     assert_equal 0.857, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
-        #   end
-        # end
-      # I think Torie's version of having each "instance" of a district create it's own hashes might be better.
+    # Actually rethinking the giant hash. I think Torie's version of having each "instance" of a district create it's own hashes might be better.
 
   class DistrictRepository
     def self.from_csv(path)
       # opens one csv in folder
+      filename = "Students qualifying for free or reduced price lunch.csv"
+      fullpath = File.join(path, filename)
+      district_repo = {}
       # pushes it into parser
+      rows = CSV.read(fullpath, headers: true, header_converters: :symbol).each do |row|
+        # only push unique names into our hash and have them point to its instance of District
+        if !district_repo.include?(row[:location])
+          district_repo[row[:location]] = {District.new(row[:location])}
+        end
+      end
       # returns hash containing just district names
     end
 
@@ -47,3 +46,7 @@
   # etc...
 
 end
+
+path       = File.expand_path("../data", __dir__)
+repository = DistrictRepository.from_csv(path)
+puts repository.inspect
