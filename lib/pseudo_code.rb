@@ -1,4 +1,5 @@
 require 'csv'
+require_relative 'parse'
 # Pseudocode
   # Notes:
     # Actually rethinking the giant hash. I think Torie's version of having each "instance" of a district create it's own hashes might be better.
@@ -35,22 +36,55 @@ require 'csv'
 
   class District
     # calls instances of "economic profile ", "enrollment" and "statewide_testing" with argument of district name
-    def initialize(name)
-      puts nil
+    attr_accessor :district_name
+
+    def initialize(district_name)
+      @district_name = district_name
     end
+
+    def economic_profile
+      econ = EconomicProfile.new(district_name)
+    end
+
   end
 
+class EconomicProfile
 
-  class EconomicProfile
     def initialize(district_name)
-      # takes disctrict name
-      # opens all csvs related to statewide testing (we will manually list these?)***
-      # returns hash containing all statewide testing data for individual school
+      @district_name = district_name
     end
 
-    def free_or_reduced_lunch_in_year
+    def free_or_reduced_lunch_by_year
+      # This method returns a hash with years as keys and an floating point three-significant digits representing a percentage.
       # looks in our created hash for key "proficient by grade"
       # does calculations
+      filename = "Students qualifying for free or reduced price lunch.csv"
+      parsed_file = Parse.new(@district_name, filename).parse_runner
+      # binding.pry
+    end
+
+
+    # => { 2000 => 0.020,
+    #      2001 => 0.024,
+    #      2002 => 0.027,
+    #      2003 => 0.030,
+    #      2004 => 0.034,
+    #      2005 => 0.058,
+    #      2006 => 0.041,
+    #      2007 => 0.050,
+    #      2008 => 0.061,
+    #      2009 => 0.070,
+    #      2010 => 0.079,
+    #      2011 => 0.084,
+    #      2012 => 0.125,
+    #      2013 => 0.091,
+    #      2014 => 0.087,
+    #    }
+
+    def free_or_reduced_lunch_in_year(year)
+      # looks in our created hash for key "proficient by grade"
+      # does calculations
+
     end
 
   # etc...
