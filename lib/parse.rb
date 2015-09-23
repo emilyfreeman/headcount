@@ -22,12 +22,18 @@ class Parse
   end
 
   def return_hash_from_row_table(rows)
-    # rows.map {|row| row.to_hash}
-    #h = Hash.new
-    rows.map {|row| row if row.fetch(:location) == @district_name}.map(&:to_h)
-    # rows.map { |row| [row.fetch(:key), row.fetch(:value)] }.map(&:to_h)
-    # hash = rows.group_by {|row| row.fetch(:location) if :location == "ACADEMY 20"}
-    # hash.class
+    final_rows = rows.map {|array| array.to_h}
+    final_rows.select{|row| row.fetch(:location) == @district_name}
   end
 
 end
+
+# filename = "Students qualifying for free or reduced price lunch.csv"
+# parsed_file = Parse.new("ACADEMY 20", filename).parse_runner
+# data = {}
+# parsed_file.each do |row|
+#   if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch"
+#     data[row.fetch(:timeframe)] = row[:data]
+#   end
+# end
+#   puts data
