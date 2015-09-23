@@ -20,7 +20,11 @@ class EconomicProfile
     end
 
     def free_or_reduced_lunch_in_year(year)
-      free_or_reduced_lunch_by_year.fetch(year)
+      if free_or_reduced_lunch_by_year[year]
+        free_or_reduced_lunch_by_year.fetch(year)
+      else
+        nil
+      end
     end
 
     def school_aged_children_in_poverty_by_year
@@ -36,7 +40,15 @@ class EconomicProfile
     end
 
     def school_aged_children_in_poverty_in_year(year)
-      school_aged_children_in_poverty_by_year.fetch(year)
+      if school_aged_children_in_poverty_by_year[year]
+        return school_aged_children_in_poverty_by_year.fetch(year)
+      else
+        return nil
+      end
+    end
+
+    def title_1_students_by_year
+
     end
 
 

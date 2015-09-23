@@ -16,7 +16,7 @@ class DistrictRepository
     end
     # returns hash containing just district names as strings
     # binding.pry
-    self
+    @repository
   end
 
   def self.find_by_name(name)
@@ -29,3 +29,6 @@ class DistrictRepository
   end
 
 end
+
+path = File.expand_path("../data", __dir__)
+puts repository = DistrictRepository.from_csv(path)
