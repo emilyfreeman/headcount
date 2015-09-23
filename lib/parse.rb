@@ -24,7 +24,12 @@ class Parse
   def return_hash_from_row_table(rows)
     # rows.map {|row| row.to_hash}
     #h = Hash.new
-    rows.map {|row| row if row.fetch(:location) == @district_name}.map(&:to_h)
+    # correct_location_rows = rows.map {|row| row if row.fetch(:location) == @district_name}
+    array_of_arrays = rows.to_a
+    correct_arrays = array_of_arrays.map {|row| row if row[0] == @district_name}.delete_if {|e| e.nil?}
+    # formatted_rows_of_hashes = correct_location_rows.map(&:to_h)
+
+
     # rows.map { |row| [row.fetch(:key), row.fetch(:value)] }.map(&:to_h)
     # hash = rows.group_by {|row| row.fetch(:location) if :location == "ACADEMY 20"}
     # hash.class
