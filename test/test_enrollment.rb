@@ -3,7 +3,7 @@ require 'minitest/pride'
 require 'pry'
 require_relative '../lib/district_repository'
 
-class TestEconomicProfile < Minitest::Test
+class TestEnrollment < Minitest::Test
 
 
 end
