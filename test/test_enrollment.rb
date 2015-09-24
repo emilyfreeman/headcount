@@ -25,7 +25,7 @@ class TestEconomicProfile < Minitest::Test
     path = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district = repository.find_by_name("AKRON R-1")
-    assert_equal ({:all => 0.011, :female => 0.021, :male => 0.000, :native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.040, :white => 0.006, :native_hawaiian_or_other_pacific_islander => 0.000, :two_or_more_races => 0.00}), district.enrollment.dropout_rate_by_category(2011)
+    assert_equal ({:all => 0.011, :female => 0.021, :male => 0.000, :native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.040, :white => 0.006, :pacific_islander => 0.000, :two_or_more => 0.00}), district.enrollment.dropout_rate_by_category(2011)
   end
 
   def test_it_returns_dropout_rate_for_males_and_females_in_one_year
@@ -39,7 +39,14 @@ class TestEconomicProfile < Minitest::Test
     path = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
     district = repository.find_by_name("AGATE 300")
-    assert_equal ({:native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.000, :white => 0.125, :native_hawaiian_or_other_pacific_islander => 0.000, :two_or_more_races => 0.00}), district.enrollment.dropout_rate_by_race_in_year(2012)
+    assert_equal ({:native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.000, :white => 0.125, :pacific_islander => 0.000, :two_or_more => 0.00}), district.enrollment.dropout_rate_by_race_in_year(2012)
+  end
+
+  def test_it_returns_dropout_rates_for_race_by_years
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("AKRON R-1")
+    assert_equal ({2011 => 0.000, 2012 => 0.000}), district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
   end
 
 end
