@@ -13,7 +13,6 @@ class EconomicProfile
       # does calculations
       filename = "Students qualifying for free or reduced price lunch.csv"
       parsed_file = Parse.new(@district_name, filename).parse_runner
-      # binding.pry
       data = {}
       parsed_file.each do |row|
         if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch" && row.fetch(:dataformat) == "Percent"
