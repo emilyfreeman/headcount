@@ -14,15 +14,15 @@ require 'pry'
     end
 
     def economic_profile
-      econ = EconomicProfile.new(district_name)
+      econ = EconomicProfile.new(name)
     end
 
     def statewide_testing
-      econ = StatewideTesting.new(district_name)
+      econ = StatewideTesting.new(name)
     end
 
     def enrollment
-      enrollment = Enrollment.new(district_name)
+      enrollment = Enrollment.new(name)
     end
 
   end
