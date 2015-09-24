@@ -7,9 +7,13 @@ class Enrollment
     @district_name = district_name
   end
 
+  def parse_method_file(filename)
+    @parsed_file ||= Parse.new(@district_name, filename).parse_runner
+  end
+
   def dropout_rate_in_year(year)
     filename = "Dropout rates by race and ethnicity.csv"
-    parsed_file = Parse.new(@district_name, filename).parse_runner
+    parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:category) == "All Students" && row.fetch(:dataformat) == "Percent"

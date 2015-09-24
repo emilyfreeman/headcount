@@ -5,7 +5,7 @@ require_relative '../lib/district_repository'
 
 # Three number decimal - do we need to rjust?
 
-class TestEconomicProfile < Minitest::Test
+class TestEnrollment < Minitest::Test
 
   def test_it_finds_dropout_rate_in_one_year
     path = File.expand_path("../data", __dir__)
