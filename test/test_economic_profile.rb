@@ -49,4 +49,18 @@ class TestEconomicProfile < Minitest::Test
     assert_equal nil, district.economic_profile.school_aged_children_in_poverty_in_year(2020)
   end
 
+  def test_it_can_return_hash_of_title_1_students
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("ACADEMY 20")
+    assert_equal({2009 => 0.014, 2011 => 0.011, 2012 => 0.01, 2013 => 0.012, 2014 => 0.027}, district.economic_profile.title_1_students_by_year)
+  end
+
+  def test_it_can_return_percentage_of_title_1_students_for_year
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("ACADEMY 20")
+    assert_equal 0.011, district.economic_profile.title_1_students_in_year(2011)
+  end
+
 end

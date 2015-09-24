@@ -48,7 +48,23 @@ class EconomicProfile
     end
 
     def title_1_students_by_year
+        filename = "Title I students.csv"
+        parsed_file = Parse.new(@district_name, filename).parse_runner
+        data = {}
+        parsed_file.each do |row|
+          if row.fetch(:dataformat) == "Percent"
+            data[row.fetch(:timeframe).to_i] = row[:data].to_s[0..4].to_f
+          end
+        end
+      data
+    end
 
+    def title_1_students_in_year(year)
+      if title_1_students_by_year[year]
+        return title_1_students_by_year.fetch(year)
+      else
+        return nil
+      end
     end
 
 

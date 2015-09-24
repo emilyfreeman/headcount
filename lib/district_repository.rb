@@ -21,7 +21,7 @@ class DistrictRepository
 
   def self.find_by_name(name)
     # searches returned hash above for district name; receives string; - returns instance of district
-    if @repository.keys.include? name
+    if @repository.keys.include? name.upcase
       return @repository[name]
     else
       nil
