@@ -28,4 +28,8 @@ class DistrictRepository
     end
   end
 
+  def find_all_matching(text)
+
+  end
+
 end
