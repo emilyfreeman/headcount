@@ -21,4 +21,8 @@ require 'pry'
       econ = StatewideTesting.new(district_name)
     end
 
+    def enrollment
+      enrollment = Enrollment.new(district_name)
+    end
+
   end
