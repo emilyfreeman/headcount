@@ -19,6 +19,7 @@ class EconomicProfile
         if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch" && row.fetch(:dataformat) == "Percent"
           data[row.fetch(:timeframe)] = row[:data].to_s[0..4].to_f
         end
+        binding.pry
       end
       data
     end

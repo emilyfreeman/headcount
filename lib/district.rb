@@ -17,4 +17,8 @@ require 'pry'
       econ = EconomicProfile.new(district_name)
     end
 
+    def statewide_testing
+      econ = StatewideTesting.new(district_name)
+    end
+
   end

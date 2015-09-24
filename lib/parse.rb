@@ -26,49 +26,4 @@ class Parse
     final_rows.select{|row| row.fetch(:location) == @district_name}
   end
 
-# #notes from josh
-#
-# class District repository
-#   def initailize(csv_loader)
-#     @csvloader = csvloader
-#   end
-#   def find_by_name(bame)
-#     District.new(name, @csvloader)
-#   end
-# end
-
-# initiailize(districts_data)
-# @districts_data
-#   data = {
-#     "ACADEMY 20" =>
-#     {economic_profile =>
-#       lunch_thing: 123
-#     }
-#   }
-
-# @districts_by_name = districts_data.map do |name, district_data|
-#   [name.upcase, District.new(name, district_Data)]}.to_h
-# end
-#
-# class District
-#
-#   @econom_profile = EconomicProfile.new(data[data])
-# attr_accessor :economic profile
-# def initailzie(name, data)
-#   @name = name
-#   @data = data
-
-
-
-
 end
-
-# filename = "Students qualifying for free or reduced price lunch.csv"
-# parsed_file = Parse.new("ACADEMY 20", filename).parse_runner
-# data = {}
-# parsed_file.each do |row|
-#   if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch"
-#     data[row.fetch(:timeframe)] = row[:data]
-#   end
-# end
-#   puts data
