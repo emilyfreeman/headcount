@@ -38,8 +38,8 @@ class TestEconomicProfile < Minitest::Test
   def test_it_returns_dropout_rate_for_race_for_one_year
     path = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
-    district = repository.find_by_name("AKRON R-1")
-    assert_equal ({:all => 0.011, :female => 0.021, :male => 0.000, :native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.040, :white => 0.006, :native_hawaiian_or_other_pacific_islander => 0.000, :two_or_more_races => 0.00}), district.enrollment.dropout_rate_by_category(2011)
+    district = repository.find_by_name("AGATE 300")
+    assert_equal ({:native_american => 0.000, :asian => 0.000, :black => 0.000, :hispanic => 0.000, :white => 0.125, :native_hawaiian_or_other_pacific_islander => 0.000, :two_or_more_races => 0.00}), district.enrollment.dropout_rate_by_race_in_year(2012)
   end
 
 end
