@@ -7,9 +7,13 @@ class EconomicProfile
     @district_name = district_name
   end
 
+  def parse_method_file(filename)
+    @parsed_file ||= Parse.new(@district_name, filename).parse_runner
+  end
+
   def free_or_reduced_lunch_by_year
     filename = "Students qualifying for free or reduced price lunch.csv"
-    parsed_file = Parse.new(@district_name, filename).parse_runner
+    parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch" && row.fetch(:dataformat) == "Percent"
@@ -29,7 +33,7 @@ class EconomicProfile
 
   def school_aged_children_in_poverty_by_year
     filename = "School-aged children in poverty.csv"
-    parsed_file = Parse.new(@district_name, filename).parse_runner
+    parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent"
@@ -49,7 +53,7 @@ class EconomicProfile
 
   def title_1_students_by_year
     filename = "Title I students.csv"
-    parsed_file = Parse.new(@district_name, filename).parse_runner
+    parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent"
