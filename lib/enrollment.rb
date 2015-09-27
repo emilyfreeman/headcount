@@ -29,13 +29,31 @@ class Enrollment
 
   def find_year_range(filename)
     parsed_file = parse_method_file(filename)
-    years = []
-    parsed_file.each do |row|
-      if !years.include?(row.fetch(:timeframe))
-        years << (row.fetch(:timeframe).to_i)
+    years = parsed_file.map{|row| row.fetch(:timeframe).to_i}.uniq
+  end
+
+  def find_rate_by_year(file_name)
+    parsed_file = parse_method_file(file_name)
+    years = find_year_range(file_name)
+    final = {}
+    parsed_file.map{|row|
+      if years.include?(row[:timeframe].to_i)
+        final[row[:timeframe].to_i] = truncate_floats(row[:data])
       end
-    end
-      years
+    }
+    final
+  end
+
+  def find_number_by_year(file_name)
+    parsed_file = parse_method_file(file_name)
+    years = find_year_range(file_name)
+    final = {}
+    parsed_file.map{|row|
+      if years.include?(row[:timeframe].to_i)
+        final[row[:timeframe].to_i] = row[:data].to_i
+      end
+    }
+    final
   end
 
   def dropout_rate_by_category(year)
@@ -72,16 +90,35 @@ class Enrollment
   end
 
   def graduation_rate_by_year
-    file_name = "High school graduation rates.csv"
-    parsed_file = parse_method_file(file_name)
-    years = find_year_range(file_name)
-    final = {}
-    parsed_file.map{|row|
-      if years.include?(row[:timeframe].to_i)
-        final[row[:timeframe].to_i] = truncate_floats(row[:data])
-      end
-    }
-    final
+    find_rate_by_year("High school graduation rates.csv")
+  end
+
+  def graduation_rate_in_year(year)
+    graduation_rate_by_year.fetch(year)
+  end
+
+  def kindergarten_participation_by_year
+    find_rate_by_year("Kindergartners in full-day program.csv")
+  end
+
+  def kindergarten_participation_in_year(year)
+    kindergarten_participation_by_year.fetch(year)
+  end
+
+  def online_participation_by_year
+    find_rate_by_year("Online pupil enrollment.csv")
+  end
+
+  def online_participation_in_year(year)
+    online_participation_by_year.fetch(year).to_i
+  end
+
+  def participation_by_year
+    find_number_by_year("Pupil enrollment.csv")
+  end
+
+  def participation_in_year(year)
+    participation_by_year.fetch(year)
   end
 
 end
