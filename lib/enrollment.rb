@@ -11,13 +11,17 @@ class Enrollment
     @parsed_file ||= Parse.new(@district_name, filename).parse_runner
   end
 
+  def truncate_floats(str)
+    str.to_s[0..4].to_f
+  end
+
   def dropout_rate_in_year(year)
     filename = "Dropout rates by race and ethnicity.csv"
     parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:category) == "All Students" && row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = row[:data].to_s[0..4].to_f
+        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
       end
     end
     data[year]
@@ -40,7 +44,7 @@ class Enrollment
     categories = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}"
-        categories[(row.fetch(:category)).split.delete_if{|word| (word == "Students") || (word == "Races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym] = row.fetch(:data).to_s[0..4].to_f
+        categories[(row.fetch(:category)).split.delete_if{|word| (word == "Students") || (word == "Races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym] = truncate_floats(row.fetch(:data))
       end
     end
     categories
@@ -74,7 +78,7 @@ class Enrollment
     final = {}
     parsed_file.map{|row|
       if years.include?(row[:timeframe].to_i)
-        final[row[:timeframe].to_i] = row[:data].to_s[0..4].to_f
+        final[row[:timeframe].to_i] = truncate_floats(row[:data])
       end
     }
     final
