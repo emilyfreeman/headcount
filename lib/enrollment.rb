@@ -63,4 +63,21 @@ class Enrollment
     final
   end
 
+  def dropout_rate_for_race_or_ethnicity_in_year(race, year)
+    dropout_rate_for_race_or_ethnicity(race).fetch(year)
+  end
+
+  def graduation_rate_by_year
+    file_name = "High school graduation rates.csv"
+    parsed_file = parse_method_file(file_name)
+    years = find_year_range(file_name)
+    final = {}
+    parsed_file.map{|row|
+      if years.include?(row[:timeframe].to_i)
+        final[row[:timeframe].to_i] = row[:data].to_s[0..4].to_f
+      end
+    }
+    final
+  end
+
 end

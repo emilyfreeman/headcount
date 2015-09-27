@@ -47,4 +47,18 @@ class TestEnrollment < Minitest::Test
     assert_equal ({2011 => 0.000, 2012 => 0.000}), district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
   end
 
+  def test_it_returns_dropout_rate_for_one_race_in_one_year
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("AKRON R-1")
+    assert_equal 0.00, district.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
+  end
+
+  def test_it_graduation_rate_by_year
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("ADAMS COUNTY 14")
+    assert_equal ({2010 => 0.570, 2011 => 0.608, 2012 => 0.633, 2013 => 0.593, 2014 => 0.659}), district.enrollment.graduation_rate_by_year
+  end
+
 end
