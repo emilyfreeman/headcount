@@ -117,5 +117,12 @@ class TestEnrollment < Minitest::Test
     assert_equal 36967, district.enrollment.participation_in_year(2009)
   end
 
+  def test_it_finds_participation_by_race
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("ADAMS COUNTY 14")
+    assert_equal ({2007 => 0.160, 2008 => 0.153, 2009 => 0.136, 2010 => 0.140, 2011 => 0.130, 2012 => 0.126, 2013 => 0.131, 2014 => 0.125}), district.enrollment.participation_by_race_or_ethincity(:white)
+  end
+
 
 end

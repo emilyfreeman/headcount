@@ -121,4 +121,25 @@ class Enrollment
     participation_by_year.fetch(year)
   end
 
+  def participation_by_category(year)
+    filename = "Pupil enrollment by race_ethnicity.csv"
+    parsed_file = parse_method_file(filename)
+    categories = {}
+    parsed_file.each do |row|
+      if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}"
+        categories[(row.fetch(:category)).split.delete_if{|word| (word == "Students") || (word == "Races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym] = truncate_floats(row.fetch(:data))
+      end
+    end
+    categories
+  end
+
+  def participation_by_race_or_ethnicity(race)
+    years = find_year_range("Pupil enrollment by race_ethnicity.csv")
+    final = {}
+    years.each do |year|
+      final[year] = participation_by_category(year).select{|k,v| k == race}.values.first
+    end
+    final
+  end
+
 end
