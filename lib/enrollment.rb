@@ -99,7 +99,7 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year)
-    graduation_rate_by_year.fetch(year)
+    graduation_rate_by_year[year]
   end
 
   def kindergarten_participation_by_year
@@ -107,7 +107,7 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-    kindergarten_participation_by_year.fetch(year)
+    kindergarten_participation_by_year[year]
   end
 
   def online_participation_by_year
@@ -115,7 +115,7 @@ class Enrollment
   end
 
   def online_participation_in_year(year)
-    online_participation_by_year.fetch(year).to_i
+    online_participation_by_year[year].to_i
   end
 
   def participation_by_year
@@ -123,7 +123,7 @@ class Enrollment
   end
 
   def participation_in_year(year)
-    participation_by_year.fetch(year)
+    participation_by_year[year]
   end
 
   def participation_by_race_or_ethnicity_in_year(year)
@@ -152,7 +152,7 @@ class Enrollment
   end
 
   def special_education_in_year(year)
-    special_education_by_year.fetch(year)
+    special_education_by_year[year]
   end
 
   def remediation_by_year
@@ -160,7 +160,7 @@ class Enrollment
   end
 
   def remediation_in_year(year)
-    remediation_by_year.fetch(year)
+    remediation_by_year[year]
   end
 
 end
