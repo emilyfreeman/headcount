@@ -122,7 +122,7 @@ class TestStatewideTesting < Minitest::Test
     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
     district = repository.find_by_name("KIOWA C-2") # can make header in CSV file the keys of the hashes
-    assert_equal "", district.statewide_testing.proficient_for_subject_by_race_in_year(:math, :pacific_islander, 2013)
+    assert_equal 0.0, district.statewide_testing.proficient_for_subject_by_race_in_year(:math, :pacific_islander, 2013)
   end
 
   # def test_proficient_for_subject_in_year
