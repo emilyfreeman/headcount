@@ -11,13 +11,17 @@ class EconomicProfile
     @parsed_file ||= Parse.new(@district_name, filename).parse_runner
   end
 
+  def truncate_floats(str)
+    str.to_s[0..4].to_f
+  end
+
   def free_or_reduced_lunch_by_year
     filename = "Students qualifying for free or reduced price lunch.csv"
     parsed_file = parse_method_file(filename)
     data = {}
     parsed_file.each do |row|
       if row.fetch(:poverty_level) == "Eligible for Free or Reduced Lunch" && row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = row[:data].to_s[0..4].to_f
+        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
       end
     end
     data
@@ -37,7 +41,7 @@ class EconomicProfile
     data = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = row[:data].to_s[0..4].to_f
+        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
       end
     end
     data
@@ -57,7 +61,7 @@ class EconomicProfile
     data = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = row[:data].to_s[0..4].to_f
+        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
       end
     end
     data
