@@ -2,6 +2,7 @@ require_relative 'parse'
 require 'pry'
 
 class Enrollment
+  # Formatting for race categories off - maybe hardcode?
 
   def initialize(district_name)
     @district_name = district_name
@@ -41,7 +42,7 @@ class Enrollment
         final[row[:timeframe].to_i] = truncate_floats(row[:data])
       end
     }
-    final
+    final.sort.to_h
   end
 
   def find_number_by_year(file_name)
@@ -56,13 +57,17 @@ class Enrollment
     final
   end
 
+  def format_race_categories(string)
+    string.split.delete_if{|word| (word == "Students") || (word.downcase == "races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym
+  end
+
   def dropout_rate_by_category(year)
     filename = "Dropout rates by race and ethnicity.csv"
     parsed_file = parse_method_file(filename)
     categories = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}"
-        categories[(row.fetch(:category)).split.delete_if{|word| (word == "Students") || (word == "Races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym] = truncate_floats(row.fetch(:data))
+        categories[format_race_categories(row.fetch(:category))] = truncate_floats(row.fetch(:data))
       end
     end
     categories
@@ -121,13 +126,13 @@ class Enrollment
     participation_by_year.fetch(year)
   end
 
-  def participation_by_category(year)
+  def participation_by_race_or_ethnicity_in_year(year)
     filename = "Pupil enrollment by race_ethnicity.csv"
     parsed_file = parse_method_file(filename)
     categories = {}
     parsed_file.each do |row|
       if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}"
-        categories[(row.fetch(:category)).split.delete_if{|word| (word == "Students") || (word == "Races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym] = truncate_floats(row.fetch(:data))
+        categories[format_race_categories(row.fetch(:race))] = truncate_floats(row.fetch(:data))
       end
     end
     categories
@@ -137,9 +142,25 @@ class Enrollment
     years = find_year_range("Pupil enrollment by race_ethnicity.csv")
     final = {}
     years.each do |year|
-      final[year] = participation_by_category(year).select{|k,v| k == race}.values.first
+      final[year] = participation_by_race_or_ethnicity_in_year(year).select{|k,v| k == race}.values.first
     end
     final
+  end
+
+  def special_education_by_year
+    find_rate_by_year("Special education.csv")
+  end
+
+  def special_education_in_year(year)
+    special_education_by_year.fetch(year)
+  end
+
+  def remediation_by_year
+    find_rate_by_year("Remediation in higher education.csv")
+  end
+
+  def remediation_in_year(year)
+    remediation_by_year.fetch(year)
   end
 
 end
