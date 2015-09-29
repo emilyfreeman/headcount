@@ -32,7 +32,8 @@ class HeadcountAnalyst
     grade_data_by_district = @dr.map do |name, instance|
       parsed_file = parser(name, choose_data_for_testing_scores(grade))
     end
-    grade_data_by_district.map.group_by {|data| data.fetch(:location)}
+    grade_data_by_district.to_h
+    # .map.group_by {|data| data.fetch(:location)}
 
     # statewide_by_date = parsed_file.group_by {|hsh| hsh.fetch(:timeframe).to_i}
 

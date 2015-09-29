@@ -34,7 +34,6 @@ class DistrictRepository
     end
   end
 
-<<<<<<< HEAD
   def self.find_all_matching(text)
     # find_all_matching - returns either [] or one or more matches which contain the supplied name fragment, case insensitive
     @repository.select do |k, v|
@@ -42,10 +41,11 @@ class DistrictRepository
         k
       end
     end
-=======
+  end
+  
   def self.repository_holder
     @repository
->>>>>>> statewide
+
   end
 
 end
