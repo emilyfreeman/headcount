@@ -12,7 +12,7 @@ class DistrictRepository
     rows = CSV.read(fullpath, headers: true, header_converters: :symbol).each do |row|
       # only push unique names into our hash and have them point to its instance of District
       if !@repository.include?(row[:location])
-        @repository[row[:location].upcase] = District.new(row[:location])
+        @repository[row[:location].upcase] = District.new(row[:location].upcase)
       end
     end
     # returns hash containing just district names as strings
@@ -29,8 +29,13 @@ class DistrictRepository
     end
   end
 
-  def find_all_matching(text)
-
+  def self.find_all_matching(text)
+    # find_all_matching - returns either [] or one or more matches which contain the supplied name fragment, case insensitive
+    @repository.select do |k, v|
+      if k.include?(text.upcase)
+        k
+      end
+    end
   end
 
 end
