@@ -3,6 +3,11 @@ require 'pry'
 
 class DistrictRepository
 
+  attr_accessor :repository
+
+  def initialize
+  end
+
   def self.from_csv(path)
     # opens one csv in folder
     filename = "Students qualifying for free or reduced price lunch.csv"
@@ -29,6 +34,7 @@ class DistrictRepository
     end
   end
 
+<<<<<<< HEAD
   def self.find_all_matching(text)
     # find_all_matching - returns either [] or one or more matches which contain the supplied name fragment, case insensitive
     @repository.select do |k, v|
@@ -36,6 +42,10 @@ class DistrictRepository
         k
       end
     end
+=======
+  def self.repository_holder
+    @repository
+>>>>>>> statewide
   end
 
 end

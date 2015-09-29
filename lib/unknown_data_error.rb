@@ -13,3 +13,11 @@ class UnknownRaceError < StandardError
   end
 
 end
+
+class InsufficientInformationError < StandardError
+
+  def message
+    "A grade must be provided to answer this question"
+  end
+
+end
