@@ -51,7 +51,7 @@ class StatewideTesting
     # The method returns a hash grouped by year referencing percentages by subject all as three digit floats.
     confirm_grade_data(grade)
     parsed_file = parser(choose_data_for_testing_scores(grade))
-
+  
     statewide_by_date = parsed_file.group_by {|hsh| hsh.fetch(:timeframe).to_i}
     statewide_by_date.each { |(k,v)| statewide_by_date[k] = v.each_with_object({}) { |score, hsh| hsh[ ( score[:score] ).to_sym.downcase ] = truncate_floats( score[:data] ) } }
   end

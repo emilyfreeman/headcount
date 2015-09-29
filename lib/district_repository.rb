@@ -2,6 +2,12 @@ require_relative 'district'
 require 'pry'
 
 class DistrictRepository
+
+  attr_accessor :repository
+
+  def initialize
+  end
+
   def self.from_csv(path)
     # opens one csv in folder
     filename = "Students qualifying for free or reduced price lunch.csv"
@@ -26,6 +32,10 @@ class DistrictRepository
     else
       nil
     end
+  end
+
+  def self.repository_holder
+    @repository
   end
 
 end
