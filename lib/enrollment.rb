@@ -16,6 +16,13 @@ class Enrollment
     str.to_s[0..4].to_f
   end
 
+  def confirm_race_data(race_sym)
+    race_data = [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white, :all_students]
+    if !race_data.any?{ |race| race == race_sym }
+      raise UnknownRaceError
+    end
+  end
+
   def dropout_rate_in_year(year)
     filename = "Dropout rates by race and ethnicity.csv"
     parsed_file = parse_method_file(filename)
@@ -58,7 +65,7 @@ class Enrollment
   end
 
   def format_race_categories(string)
-    string.split.delete_if{|word| (word == "Students") || (word.downcase == "races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").to_sym
+    string.split.delete_if{|word| (word == "Students") || (word.downcase == "races")}.join("_").downcase.gsub("native_hawaiian_or_other_pacific_islander", "pacific_islander").gsub("american_indian", "native_american").to_sym
   end
 
   def dropout_rate_by_category(year)
@@ -74,24 +81,37 @@ class Enrollment
   end
 
   def dropout_rate_by_gender_in_year(year)
-    dropout_rate_by_category(year).select{|k,v| (k == :female || k == :male)}
+    rate = dropout_rate_by_category(year).select{|k,v| (k == :female || k == :male)}
+    if rate.empty?
+      return nil
+    else
+      rate
+    end
   end
 
   def dropout_rate_by_race_in_year(year)
-    dropout_rate_by_category(year).select{|k,v| (k != :female && k != :male && k != :all)}
+    rate = dropout_rate_by_category(year).select{|k,v| (k != :female && k != :male && k != :all)}
+    if rate.empty?
+      return nil
+    else
+      return rate
+    end
   end
 
   def dropout_rate_for_race_or_ethnicity(race)
+    confirm_race_data(race)
     years = find_year_range("Dropout rates by race and ethnicity.csv")
     final = {}
     years.each do |year|
       final[year] = dropout_rate_by_category(year).select{|k,v| k == race}.values.first
     end
     final
+
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
-    dropout_rate_for_race_or_ethnicity(race).fetch(year)
+    confirm_race_data(race)
+    dropout_rate_for_race_or_ethnicity(race)[year]
   end
 
   def graduation_rate_by_year
@@ -115,7 +135,9 @@ class Enrollment
   end
 
   def online_participation_in_year(year)
-    online_participation_by_year[year].to_i
+    if online_participation_by_year[year]
+      online_participation_by_year[year].to_i
+    end
   end
 
   def participation_by_year
@@ -131,14 +153,17 @@ class Enrollment
     parsed_file = parse_method_file(filename)
     categories = {}
     parsed_file.each do |row|
-      if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}"
-        categories[format_race_categories(row.fetch(:race))] = truncate_floats(row.fetch(:data))
+      if row.fetch(:dataformat) == "Percent" && row.fetch(:timeframe) == "#{year}" && row.fetch(:race) != "Total"
+        categories[format_race_categories(row[:race])] = truncate_floats(row.fetch(:data))
       end
     end
+    unless categories.empty?
     categories
+  end
   end
 
   def participation_by_race_or_ethnicity(race)
+    confirm_race_data(race)
     years = find_year_range("Pupil enrollment by race_ethnicity.csv")
     final = {}
     years.each do |year|

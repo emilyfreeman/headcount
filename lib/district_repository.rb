@@ -36,13 +36,13 @@ class DistrictRepository
 
   def self.find_all_matching(text)
     # find_all_matching - returns either [] or one or more matches which contain the supplied name fragment, case insensitive
-    @repository.select do |k, v|
+    @repository.select{|k, v|
       if k.include?(text.upcase)
-        k
+        v
       end
-    end
+    }.values.to_a
   end
-  
+
   def self.repository_holder
     @repository
 
