@@ -31,19 +31,47 @@ class HeadcountAnalyst
     num.to_s[0..4].to_f
   end
 
-  def top_statewide_testing_year_over_year_growth(grade, top=1, subject)
+  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1)
     confirm_grade_data(grade)
-    growth_hash_for_all_districts_by_subject(grade, top, subject)
+    if subject != :all_subjects
+      find_top_performers(grade, top, subject)
+    else
+      create_avg_for_all_subjects(grade, top, weight=1)
+    end
   end
 
+  def create_avg_for_all_subjects(grade, top, weight=1)
+    math_hsh = growth_hash_for_all_districts_by_subject(grade, top, :math)
+    reading_hsh = growth_hash_for_all_districts_by_subject(grade, top, :reading)
+    writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
+    two_subjects = math_hsh.zip(reading_hsh)
+    subject_hsh = two_subjects.zip(writing_hsh)
+    binding.pry
+  end
+
+  def average_values
+    self.reduce(&:+) / self.size
+  end
+
+# r = a[0].keys.map do |key|
+#   [key, a.map { |hash| hash[key] }.average]
+# end
+#
+# puts Hash[*r.flatten]
+# end
+
   def growth_hash_for_all_districts_by_subject(grade, top, subject)
-    grade_data_by_district = @dr.map do |name, instance|
+    @dr.map do |name, instance|
       parsed_file_for_district = parser( name, choose_data_for_testing_scores(grade) )
       b = parsed_file_for_district.group_by { |data| data[:score].downcase.to_sym }
       c = b[subject.downcase.to_sym].group_by { |hsh| hsh[:timeframe].to_i }
       growth_over_time = find_growth_float(c)
       growth_hash = { name => truncate_floats(growth_over_time) }
     end
+  end
+
+  def find_top_performers(grade, top, subject)
+    grade_data_by_district = growth_hash_for_all_districts_by_subject(grade, top, subject)
     one_hash = grade_data_by_district.inject(&:merge)
     one_hash.sort_by {|k, v| -v}.first(top)
   end
