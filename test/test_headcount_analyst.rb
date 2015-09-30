@@ -13,6 +13,7 @@ class TestHeadcountAnalyst < Minitest::Test
   #   assert_equal 0.0, ha.top_statewide_testing_year_over_year_growth(3, :math)
   # end
 
+
   def test_statewide_testing_year_over_year_find_avg_in_all_subjects
     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
@@ -40,6 +41,49 @@ class TestHeadcountAnalyst < Minitest::Test
 #     ha = HeadcountAnalyst.new(repository)
 #     assert_equal 0.406, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ASPEN 1')
 #   end
+
+  # def test_statewide_testing_year_over_year_find_avg_in_all_subjects
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   ha = HeadcountAnalyst.new(repository)
+  #   assert_equal 0.0, ha.top_statewide_testing_year_over_year_growth(3)
+  # end
+  #
+  # def test_year_over_year_growth_wiley_re
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   ha = HeadcountAnalyst.new(repository)
+  #   assert_equal 0.0, ha.top_statewide_testing_year_over_year_growth(3, :math)
+  # end
+
+  def test_year_over_year_growth_with_subject_weighting
+    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+    ha = HeadcountAnalyst.new(repository)
+    assert_equal 0.0, ha.top_statewide_testing_year_over_year_growth(3, :math)
+  end
+
+# :weighting => {:math = 0.5, :reading => 0.5, :writing => 0.0}
+  # def test_kindergarten_participation_comparison_to_state
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   ha = HeadcountAnalyst.new(repository)
+  #   assert_equal 0.766,ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  # end
+  #
+  # def test_kindergarten_participation_comparison_to_itself_returns_one
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   ha = HeadcountAnalyst.new(repository)
+  #   assert_equal 1.0, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ACADEMY 20')
+  # end
+  #
+  # def test_kindergarten_participation_comparison_to_other_district
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   ha = HeadcountAnalyst.new(repository)
+  #   assert_equal 0.406, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ASPEN 1')
+  # end
 #
 #   def test_it_compares_median_income_variation_to_kindergarten_participation_variation
 #     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.

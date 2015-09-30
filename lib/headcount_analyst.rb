@@ -68,19 +68,13 @@ class HeadcountAnalyst
     averages.sort_by {|k, v| -v}.first(top).flatten
   end
 
-# r = a[0].keys.map do |key|
-#   [key, a.map { |hash| hash[key] }.average]
-# end
-#
-# puts Hash[*r.flatten]
-# end
-
   def growth_hash_for_all_districts_by_subject(grade, top, subject)
     @dr.map do |name, instance|
       parsed_file_for_district = parser( name, choose_data_for_testing_scores(grade) )
-      b = parsed_file_for_district.group_by { |data| data[:score].downcase.to_sym }
-      c = b[subject.downcase.to_sym].group_by { |hsh| hsh[:timeframe].to_i }
-      growth_over_time = find_growth_float(c)
+      data_by_subject = parsed_file_for_district.group_by { |data| data[:score].downcase.to_sym }
+
+      data_by_year = data_by_subject[subject.downcase.to_sym].group_by { |hsh| hsh[:timeframe].to_i }
+      growth_over_time = find_growth_float(data_by_year)
       growth_hash = { name => truncate_floats(growth_over_time) }
     end
   end
@@ -88,16 +82,16 @@ class HeadcountAnalyst
   def find_top_performers(grade, top, subject)
     grade_data_by_district = growth_hash_for_all_districts_by_subject(grade, top, subject)
     one_hash = grade_data_by_district.inject(&:merge)
-    one_hash.sort_by {|k, v| -v}.first(top)
+    one_hash.sort_by {|k, v| -v}.first(top).flatten
   end
 
-  def find_growth_float(c)
-    ( ( (c.fetch(2014)[0][:data].to_f) - (c.fetch(2013)[0][:data].to_f) ) +
-      ( (c.fetch(2013)[0][:data].to_f) - (c.fetch(2012)[0][:data].to_f) ) +
-      ( (c.fetch(2012)[0][:data].to_f) - (c.fetch(2011)[0][:data].to_f) ) +
-      ( (c.fetch(2011)[0][:data].to_f) - (c.fetch(2010)[0][:data].to_f) ) +
-      ( (c.fetch(2010)[0][:data].to_f) - (c.fetch(2009)[0][:data].to_f) ) +
-      ( (c.fetch(2009)[0][:data].to_f) - (c.fetch(2008)[0][:data].to_f) ) / 6 )
+  def find_growth_float(data)
+    ( ( (data.fetch(2014)[0][:data].to_f) - (data.fetch(2013)[0][:data].to_f) ) +
+      ( (data.fetch(2013)[0][:data].to_f) - (data.fetch(2012)[0][:data].to_f) ) +
+      ( (data.fetch(2012)[0][:data].to_f) - (data.fetch(2011)[0][:data].to_f) ) +
+      ( (data.fetch(2011)[0][:data].to_f) - (data.fetch(2010)[0][:data].to_f) ) +
+      ( (data.fetch(2010)[0][:data].to_f) - (data.fetch(2009)[0][:data].to_f) ) +
+      ( (data.fetch(2009)[0][:data].to_f) - (data.fetch(2008)[0][:data].to_f) ) / 6 )
   end
 
   def confirm_district(district_name)
