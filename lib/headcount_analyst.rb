@@ -19,10 +19,6 @@ class HeadcountAnalyst
     end
   end
 
-  def truncate_floats(str)
-    str.to_s[0..4].to_f
-  end
-
   def choose_data_for_testing_scores(grade)
     if grade == 3
       "3rd grade students scoring proficient or above on the CSAP_TCAP.csv"
@@ -44,15 +40,15 @@ class HeadcountAnalyst
     end
   end
 
-  def create_avg_for_all_subjects(grade, top, weight=1)
+  def create_3_subject_hash(grade, top, weight=1)
     math_hsh = growth_hash_for_all_districts_by_subject(grade, top, :math)
     reading_hsh = growth_hash_for_all_districts_by_subject(grade, top, :reading)
     writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
     two_subjects = math_hsh.zip(reading_hsh)
-    subject_hsh = two_subjects.zip(writing_hsh)
+    two_subjects.zip(writing_hsh)
+  end
 
-    flattened = subject_hsh.flatten
-    averages = {}
+  def merge_subject_hashes_into_one(subject_hsh, averages={})
     flattened.each do |item|
         key, value = item.flatten
         if averages[key].nil?
@@ -60,11 +56,16 @@ class HeadcountAnalyst
         end
         averages[key] << value
     end
+    averages
+  end
 
+  def create_avg_for_all_subjects(grade, top, weight=1)
+    subject_hsh = create_3_subject_hash(grade, top, weight=1)
+    flattened = subject_hsh.flatten
+    averages = merge_subject_hashes_into_one(flattened)
     averages.each do |key,value|
       averages[key] = truncate_floats(value.reduce(&:+) / value.size)
     end
-
     averages.sort_by {|k, v| -v}.first(top).flatten
   end
 
@@ -72,7 +73,6 @@ class HeadcountAnalyst
     @dr.map do |name, instance|
       parsed_file_for_district = parser( name, choose_data_for_testing_scores(grade) )
       data_by_subject = parsed_file_for_district.group_by { |data| data[:score].downcase.to_sym }
-
       data_by_year = data_by_subject[subject.downcase.to_sym].group_by { |hsh| hsh[:timeframe].to_i }
       growth_over_time = find_growth_float(data_by_year)
       growth_hash = { name => truncate_floats(growth_over_time) }

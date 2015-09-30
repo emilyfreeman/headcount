@@ -60,22 +60,16 @@ class StatewideTesting
   end
 
   def proficient_by_grade(grade)
-    # grade is an integer; either 3 or 8
-    # unknown grade should raise a UnknownDataError
-    # The method returns a hash grouped by year referencing percentages by subject all as three digit floats.
     confirm_grade_data(grade)
     parsed_file = parser(choose_data_for_testing_scores(grade))
     removed_empty_data_sets = parsed_file.reject {|hsh| hsh.has_value?("LNE") || hsh.has_value?("#VALUE!") || hsh.has_value?("N/A") || hsh.has_value?(nil)}
     statewide_by_date = removed_empty_data_sets.group_by {|hsh| hsh.fetch(:timeframe).to_i}
-
     statewide_by_date.each { |(k,v)| statewide_by_date[k] = v.each_with_object({}) { |score, hsh| hsh[ ( score[:score] ).to_sym.downcase ] = truncate_floats( score[:data] ) } }
 
   end
 
   def filter_scores_on_race(scores, race)
-    # scores.select { |score| score[:race_ethnicity].to_sym.downcase == race }
     scores.select { |score| score[:race_ethnicity].gsub("Hawaiian/Pacific Islander", "Pacific Islander").gsub(" ", "_").to_sym.downcase == race }
-
   end
 
   def retrieve_race_based_reading_scores(sym)
@@ -95,11 +89,9 @@ class StatewideTesting
 
   def proficient_by_race_or_ethnicity(queried_race)
     confirm_race_data(queried_race)
-
     filtered_reading_scores = retrieve_race_based_reading_scores(queried_race)
     filtered_writing_scores = retrieve_race_based_writing_scores(queried_race)
     filtered_math_scores = retrieve_race_based_math_scores(queried_race)
-
     mapped_reading = filtered_reading_scores.map { |score| {score[:timeframe] => {reading: score[:data]}} }
     mapped_math = filtered_math_scores.map { |score| {score[:timeframe] => {math: score[:data]}} }
     create_reading_writing_math_scores_by_race(filtered_writing_scores, mapped_reading, mapped_math)
@@ -117,7 +109,6 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    # The method returns a truncated three-digit floating point number representing a percentage.
     confirm_year_data_for_grade_scores(year)
     confirm_grade_data(grade)
     confirm_subject_data(subject)
@@ -128,8 +119,6 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_race_in_year(subject, queried_race, year)
-    # This method take three parameters: subject as symbol; race as symbol; year as integer
-    # The method returns a truncated three-digit floating point number representing a percentage.
     confirm_race_data(queried_race)
     confirm_subject_data(subject)
     mapped = proficient_by_race_or_ethnicity(queried_race)
@@ -137,8 +126,8 @@ class StatewideTesting
   end
 
   def proficient_for_subject_in_year(subject, year)
-  # This method take two parameters: subject as symbol; year as integer
     confirm_year_data_for_subject_scores(year)
     proficient_for_subject_by_race_in_year(subject, :all_students, year)
   end
+  
 end
