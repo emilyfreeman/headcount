@@ -75,5 +75,14 @@ class EconomicProfile
     end
   end
 
+  def median_income_by_year
+    filename = "Median household income.csv"
+    parsed_file = parse_method_file(filename)
+    data = {}
+    parsed_file.each do |row|
+        data[row.fetch(:timeframe).to_i] = row[:data].to_i
+    end
+    data
+  end
 
 end
