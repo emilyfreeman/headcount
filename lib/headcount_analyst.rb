@@ -100,7 +100,15 @@ class HeadcountAnalyst
       ( (c.fetch(2009)[0][:data].to_f) - (c.fetch(2008)[0][:data].to_f) ) / 6 )
   end
 
+  def confirm_district(district_name)
+    if !@dr.include?(district_name)
+      raise UnknownDataError
+    end
+  end
+
   def kindergarten_participation_rate_variation(school_one, school_two)
+    confirm_district(school_one)
+    confirm_district(school_two[:against])
     school_one_participation = find_participation_average(@dr[school_one].enrollment.kindergarten_participation_by_year)
     school_two_participation = find_participation_average(@dr[(school_two[:against])].enrollment.kindergarten_participation_by_year)
     truncate_floats(school_one_participation/school_two_participation)
