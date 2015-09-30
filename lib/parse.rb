@@ -23,7 +23,7 @@ class Parse
 
   def return_hash_from_row_table(rows)
     final_rows = rows.map {|array| array.to_h}
-    final_rows.select{|row| row.fetch(:location) == @district_name}
+    final_rows.select{|row| row.fetch(:location).upcase == @district_name.upcase}
   end
 
 end
