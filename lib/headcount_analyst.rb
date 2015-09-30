@@ -50,7 +50,6 @@ class HeadcountAnalyst
     writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
     two_subjects = math_hsh.zip(reading_hsh)
     subject_hsh = two_subjects.zip(writing_hsh)
-    binding.pry
   end
 
   def average_values
