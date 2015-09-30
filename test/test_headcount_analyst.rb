@@ -58,12 +58,20 @@ class TestHeadcountAnalyst < Minitest::Test
     assert_equal false, ha.kindergarten_participation_correlates_with_household_income(:across => ['ACADEMY 20', 'YUMA SCHOOL DISTRICT 1', 'WILEY RE-13 JT', 'SPRINGFIELD RE-4'])
   end
 
-  def test_it_evaluates_correlation_across_districts
+  def test_it_evaluates_correlation_of_kindergarten_participation_with_high_school_graduation
     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
     ha = HeadcountAnalyst.new(repository)
     assert_equal 0.641, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
     assert_equal 0.222, ha.kindergarten_participation_against_high_school_graduation('CHERRY CREEK 5')
+  end
+
+  def test_it_evaluates_correlation_across_districts_for_graduation_rates
+    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+    ha = HeadcountAnalyst.new(repository)
+    assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'CHERRY CREEK 5')
+    assert_equal true, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ARICKAREE R-2')
   end
 
 end

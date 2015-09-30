@@ -105,4 +105,14 @@ class HeadcountAnalyst
     school_one_participation/school_two_participation
   end
 
+  def kindergarten_participation_correlates_with_high_school_graduation(district_name)
+    if district_name.keys.include?(:for)
+      evaluate_correlation(kindergarten_participation_against_high_school_graduation(district_name[:for]))
+    else
+      districts = district_name[:across].length
+      average_variation = (district_name[:across].inject(0){|sum, district| kindergarten_participation_against_high_school_graduation(district) + sum})/ districts
+      evaluate_correlation(average_variation)
+    end
+  end
+
 end
