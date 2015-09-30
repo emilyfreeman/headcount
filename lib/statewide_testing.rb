@@ -30,6 +30,20 @@ class StatewideTesting
     end
   end
 
+  def confirm_year_data_for_grade_scores(year)
+    year_data = [2008, 2009, 2010, 2011, 2012, 2013, 2014]
+    if !year_data.any?{ |input| input == year }
+      raise UnknownDataError
+    end
+  end
+
+  def confirm_year_data_for_subject_scores(year)
+    year_data = [2011, 2012, 2013, 2014]
+    if !year_data.any?{ |input| input == year }
+      raise UnknownDataError
+    end
+  end
+
   def confirm_subject_data(subject_sym)
     subject_data = [:math, :reading, :writing]
     if !subject_data.any?{ |subject| subject == subject_sym }
@@ -51,9 +65,11 @@ class StatewideTesting
     # The method returns a hash grouped by year referencing percentages by subject all as three digit floats.
     confirm_grade_data(grade)
     parsed_file = parser(choose_data_for_testing_scores(grade))
-  
-    statewide_by_date = parsed_file.group_by {|hsh| hsh.fetch(:timeframe).to_i}
+    removed_empty_data_sets = parsed_file.reject {|hsh| hsh.has_value?("LNE") || hsh.has_value?("#VALUE!") || hsh.has_value?("N/A") || hsh.has_value?(nil)}
+    statewide_by_date = removed_empty_data_sets.group_by {|hsh| hsh.fetch(:timeframe).to_i}
+
     statewide_by_date.each { |(k,v)| statewide_by_date[k] = v.each_with_object({}) { |score, hsh| hsh[ ( score[:score] ).to_sym.downcase ] = truncate_floats( score[:data] ) } }
+
   end
 
   def filter_scores_on_race(scores, race)
@@ -102,6 +118,7 @@ class StatewideTesting
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
     # The method returns a truncated three-digit floating point number representing a percentage.
+    confirm_year_data_for_grade_scores(year)
     confirm_grade_data(grade)
     confirm_subject_data(subject)
     parsed_file = parser(choose_data_for_testing_scores(grade))
@@ -121,7 +138,7 @@ class StatewideTesting
 
   def proficient_for_subject_in_year(subject, year)
   # This method take two parameters: subject as symbol; year as integer
+    confirm_year_data_for_subject_scores(year)
     proficient_for_subject_by_race_in_year(subject, :all_students, year)
   end
-
 end

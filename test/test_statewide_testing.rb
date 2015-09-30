@@ -11,7 +11,14 @@ class TestStatewideTesting < Minitest::Test
   #   district = repository.find_by_name("ACADEMY 20") # can make header in CSV file the keys of the hashes
   #   assert_equal 0.862, district.statewide_testing.proficient_by_grade(3).fetch(2009)[:reading]
   # end
-  #
+
+  def test_proficient_by_grade_no_data
+    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+    district = repository.find_by_name("WOODLIN R-104") # can make header in CSV file the keys of the hashes
+    assert_equal ({}), district.statewide_testing.proficient_by_grade(3)
+  end
+
   # def test_proficient_by_grade_data_error
   #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
   #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
@@ -118,12 +125,12 @@ class TestStatewideTesting < Minitest::Test
   #   assert_raises(UnknownDataError) {district.statewide_testing.proficient_for_subject_by_race_in_year(:science, :asian, 2013)}
   # end
 
-  def test_proficient_for_subject_by_race_in_year_pacific_islander
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    district = repository.find_by_name("KIOWA C-2") # can make header in CSV file the keys of the hashes
-    assert_equal 0.0, district.statewide_testing.proficient_for_subject_by_race_in_year(:math, :pacific_islander, 2013)
-  end
+  # def test_proficient_for_subject_by_race_in_year_pacific_islander
+  #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+  #   repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+  #   district = repository.find_by_name("KIOWA C-2") # can make header in CSV file the keys of the hashes
+  #   assert_equal 0.0, district.statewide_testing.proficient_for_subject_by_race_in_year(:math, :pacific_islander, 2013)
+  # end
 
   # def test_proficient_for_subject_in_year
   #   path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
