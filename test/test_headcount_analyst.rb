@@ -20,65 +20,65 @@ class TestHeadcountAnalyst < Minitest::Test
     assert_equal 0.0, ha.top_statewide_testing_year_over_year_growth(3)
   end
 
-  def test_kindergarten_participation_comparison_to_state
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal 0.766,ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-  end
-
-  def test_kindergarten_participation_comparison_to_itself_returns_one
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal 1.0, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ACADEMY 20')
-  end
-
-  def test_kindergarten_participation_comparison_to_other_district
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal 0.406, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ASPEN 1')
-  end
-
-  def test_it_compares_median_income_variation_to_kindergarten_participation_variation
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal 0.501, ha.kindergarten_participation_against_household_income('ACADEMY 20')
-    assert_equal 1.631, ha.kindergarten_participation_against_household_income('ASPEN 1')
-    assert_equal 1.282, ha.kindergarten_participation_against_household_income('DEL NORTE C-7')
-  end
-
-  def test_it_evaluates_correlation
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(for: 'AGUILAR REORGANIZED 6')
-# `    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(for: 'COLORADO')
-  end
-
-  def test_it_evaluates_correlation_across_districts
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(:across => ['ACADEMY 20', 'YUMA SCHOOL DISTRICT 1', 'WILEY RE-13 JT', 'SPRINGFIELD RE-4'])
-  end
-
-  def test_it_evaluates_correlation_of_kindergarten_participation_with_high_school_graduation
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal 0.641, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-    assert_equal 0.222, ha.kindergarten_participation_against_high_school_graduation('CHERRY CREEK 5')
-  end
-
-  def test_it_evaluates_correlation_across_districts_for_graduation_rates
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    ha = HeadcountAnalyst.new(repository)
-    assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'CHERRY CREEK 5')
-    assert_equal true, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ARICKAREE R-2')
-  end
+#   def test_kindergarten_participation_comparison_to_state
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal 0.766,ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+#   end
+#
+#   def test_kindergarten_participation_comparison_to_itself_returns_one
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal 1.0, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ACADEMY 20')
+#   end
+#
+#   def test_kindergarten_participation_comparison_to_other_district
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal 0.406, ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ASPEN 1')
+#   end
+#
+#   def test_it_compares_median_income_variation_to_kindergarten_participation_variation
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal 0.501, ha.kindergarten_participation_against_household_income('ACADEMY 20')
+#     assert_equal 1.631, ha.kindergarten_participation_against_household_income('ASPEN 1')
+#     assert_equal 1.282, ha.kindergarten_participation_against_household_income('DEL NORTE C-7')
+#   end
+#
+#   def test_it_evaluates_correlation
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal false, ha.kindergarten_participation_correlates_with_household_income(for: 'AGUILAR REORGANIZED 6')
+# # `    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(for: 'COLORADO')
+#   end
+#
+#   def test_it_evaluates_correlation_across_districts
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal false, ha.kindergarten_participation_correlates_with_household_income(:across => ['ACADEMY 20', 'YUMA SCHOOL DISTRICT 1', 'WILEY RE-13 JT', 'SPRINGFIELD RE-4'])
+#   end
+#
+#   def test_it_evaluates_correlation_of_kindergarten_participation_with_high_school_graduation
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal 0.641, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+#     assert_equal 0.222, ha.kindergarten_participation_against_high_school_graduation('CHERRY CREEK 5')
+#   end
+#
+#   def test_it_evaluates_correlation_across_districts_for_graduation_rates
+#     path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
+#     repository = DistrictRepository.from_csv(path) # repository almost means a search engine
+#     ha = HeadcountAnalyst.new(repository)
+#     assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'CHERRY CREEK 5')
+#     assert_equal true, ha.kindergarten_participation_correlates_with_high_school_graduation(for: 'ARICKAREE R-2')
+#   end
 
 end

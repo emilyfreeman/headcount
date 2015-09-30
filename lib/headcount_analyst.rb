@@ -50,11 +50,22 @@ class HeadcountAnalyst
     writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
     two_subjects = math_hsh.zip(reading_hsh)
     subject_hsh = two_subjects.zip(writing_hsh)
-    binding.pry
-  end
 
-  def average_values
-    self.reduce(&:+) / self.size
+    flattened = subject_hsh.flatten
+    averages = {}
+    flattened.each do |item|
+        key, value = item.flatten
+        if averages[key].nil?
+          averages[key] = []
+        end
+        averages[key] << value
+    end
+
+    averages.each do |key,value|
+      averages[key] = truncate_floats(value.reduce(&:+) / value.size)
+    end
+
+    averages.sort_by {|k, v| -v}.first(top).flatten
   end
 
 # r = a[0].keys.map do |key|
