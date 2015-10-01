@@ -31,16 +31,49 @@ class HeadcountAnalyst
     num.to_s[0..4].to_f
   end
 
-  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1, weight = {})
+  def create_weighted_math_hsh(grade, weighting, top)
+    math_hsh = growth_hash_for_all_districts_by_subject(grade, top, :math)
+    weighted_math = math_hsh.map {|hsh| hsh.each {|k, v| hsh[k] =  v * weighting[:weighting][:math]} }
+  end
+
+  def create_weighted_reading_hsh(grade, weighting, top)
+    reading_hsh = growth_hash_for_all_districts_by_subject(grade, top, :reading)
+    reading_hsh.map {|hsh| hsh.each {|k, v| hsh[k] =  v * weighting[:weighting][:reading]} }
+  end
+
+  def create_weighted_writing_hsh(grade, weighting, top)
+    writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
+    weighted_writing = writing_hsh.map {|hsh| hsh.each {|k, v| hsh[k] =  v * weighting[:weighting][:writing]} }
+  end
+
+  def merge_weighted_hshs(weighted_reading, weighted_math, weighted_writing)
+    two_subjects = weighted_math.zip(weighted_reading)
+    weighted_hsh_all_subjects = two_subjects.zip(weighted_writing)
+    flattened_weighted_hsh = weighted_hsh_all_subjects.flatten
+    merge_subject_hashes_into_one(flattened_weighted_hsh, averages={})
+  end
+
+  def top_statewide_testing_year_over_year_growth_weighted(grade, weighting, top = 1)
+    weighted_math = create_weighted_math_hsh(grade, weighting, top)
+    weighted_reading = create_weighted_reading_hsh(grade, weighting, top)
+    weighted_writing = create_weighted_writing_hsh(grade, weighting, top)
+
+    weighted_scores = merge_weighted_hshs(weighted_reading, weighted_math, weighted_writing)
+
+    avg_value = average(weighted_scores)
+    sort_by_top_value(avg_value, top)
+  end
+
+  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1)
     confirm_grade_data(grade)
     if subject != :all_subjects
       find_top_performers(grade, top, subject)
     else
-      create_avg_for_all_subjects(grade, top, weight=1)
+      create_avg_for_all_subjects(grade, top)
     end
   end
 
-  def create_3_subject_hash(grade, top, weight=1)
+  def create_3_subject_hash(grade, top=1)
     math_hsh = growth_hash_for_all_districts_by_subject(grade, top, :math)
     reading_hsh = growth_hash_for_all_districts_by_subject(grade, top, :reading)
     writing_hsh = growth_hash_for_all_districts_by_subject(grade, top, :writing)
@@ -49,7 +82,7 @@ class HeadcountAnalyst
   end
 
   def merge_subject_hashes_into_one(subject_hsh, averages={})
-    flattened.each do |item|
+    subject_hsh.each do |item|
         key, value = item.flatten
         if averages[key].nil?
           averages[key] = []
@@ -59,14 +92,18 @@ class HeadcountAnalyst
     averages
   end
 
-  def create_avg_for_all_subjects(grade, top, weight=1)
-    subject_hsh = create_3_subject_hash(grade, top, weight=1)
-    flattened = subject_hsh.flatten
-    averages = merge_subject_hashes_into_one(flattened)
-    averages.each do |key,value|
-      averages[key] = truncate_floats(value.reduce(&:+) / value.size)
+  def average(data)
+    data.each do |key,value|
+      data[key] = truncate_floats(value.reduce(&:+) / value.size)
     end
-    averages.sort_by {|k, v| -v}.first(top).flatten
+  end
+
+  def create_avg_for_all_subjects(grade, top, weight=1)
+    subject_hsh = create_3_subject_hash(grade, top)
+    flattened = subject_hsh.flatten
+    data = merge_subject_hashes_into_one(flattened)
+    avg_value = average(data)
+    sort_by_top_value(avg_value, top)
   end
 
   def growth_hash_for_all_districts_by_subject(grade, top, subject)
@@ -82,7 +119,11 @@ class HeadcountAnalyst
   def find_top_performers(grade, top, subject)
     grade_data_by_district = growth_hash_for_all_districts_by_subject(grade, top, subject)
     one_hash = grade_data_by_district.inject(&:merge)
-    output = one_hash.sort_by {|k, v| -v}.first(top)
+    sort_by_top_value(one_hash, top)
+  end
+
+  def sort_by_top_value(hsh, top)
+    output = hsh.sort_by {|k, v| -v}.first(top)
     output.flatten
   end
 
