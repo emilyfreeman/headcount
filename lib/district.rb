@@ -3,10 +3,8 @@ require_relative 'statewide_testing'
 require_relative 'enrollment'
 
 require 'pry'
-#top of data hierarchy; methods: name, statewide_testing, enrollment
 
   class District
-    # calls instances of "economic profile ", "enrollment" and "statewide_testing" with argument of district name
     attr_accessor :name
 
     def initialize(district_name)
