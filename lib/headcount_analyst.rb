@@ -31,7 +31,7 @@ class HeadcountAnalyst
     num.to_s[0..4].to_f
   end
 
-  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1)
+  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1, weight = {})
     confirm_grade_data(grade)
     if subject != :all_subjects
       find_top_performers(grade, top, subject)
@@ -82,7 +82,8 @@ class HeadcountAnalyst
   def find_top_performers(grade, top, subject)
     grade_data_by_district = growth_hash_for_all_districts_by_subject(grade, top, subject)
     one_hash = grade_data_by_district.inject(&:merge)
-    one_hash.sort_by {|k, v| -v}.first(top).flatten
+    output = one_hash.sort_by {|k, v| -v}.first(top)
+    output.flatten
   end
 
   def find_growth_float(data)

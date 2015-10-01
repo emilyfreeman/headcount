@@ -16,9 +16,12 @@ class Parse
   end
 
   def create_row_table
-    path = File.expand_path("../data", __dir__)
     fullpath = File.join(path, @filename)
     CSV.read(fullpath, headers: true, header_converters: :symbol)
+  end
+
+  def path
+    DistrictRepository.path
   end
 
   def return_hash_from_row_table(rows)
