@@ -22,6 +22,14 @@ class Enrollment
     end
   end
 
+  def is_nil?(rate)
+    if rate.empty?
+      return nil
+    else
+      rate
+    end
+  end
+
   def dropout_rate_in_year(year)
     filename = "Dropout rates by race and ethnicity.csv"
     parsed_file = parse_method_file(filename)
@@ -81,20 +89,12 @@ class Enrollment
 
   def dropout_rate_by_gender_in_year(year)
     rate = dropout_rate_by_category(year).select{|k,v| (k == :female || k == :male)}
-    if rate.empty?
-      return nil
-    else
-      rate
-    end
+    is_nil?(rate)
   end
 
   def dropout_rate_by_race_in_year(year)
     rate = dropout_rate_by_category(year).select{|k,v| (k != :female && k != :male && k != :all)}
-    if rate.empty?
-      return nil
-    else
-      return rate
-    end
+    is_nil?(rate)
   end
 
   def dropout_rate_for_race_or_ethnicity(race)

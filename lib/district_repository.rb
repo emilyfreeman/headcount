@@ -5,9 +5,6 @@ class DistrictRepository
 
   attr_accessor :repository
 
-  def initialize
-  end
-
   def self.from_csv(path)
     filename = "Students qualifying for free or reduced price lunch.csv"
     fullpath = File.join(path, filename)
@@ -38,8 +35,6 @@ class DistrictRepository
 
   def self.repository_holder
     @repository
-
-
   end
 
   def self.path
