@@ -2,7 +2,6 @@ require_relative 'parse'
 require 'pry'
 
 class Enrollment
-  # Formatting for race categories off - maybe hardcode?
 
   def initialize(district_name)
     @district_name = district_name

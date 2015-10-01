@@ -2,7 +2,6 @@ require 'csv'
 require 'pry'
 
 class Parse
-  # takes a filename; returns parsed hash
 
   def initialize(district_name, filename, data_hash={})
     @district_name = district_name

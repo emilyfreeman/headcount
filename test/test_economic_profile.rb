@@ -13,9 +13,9 @@ class TestEconomicProfile < Minitest::Test
   end
 
   def test_free_or_reduced_lunch_in_year_for_different_district
-    path = File.expand_path("../data", __dir__) # __dir__ means the directory this file is currently in. And __file__ is the current file.
-    repository = DistrictRepository.from_csv(path) # repository almost means a search engine
-    district = repository.find_by_name("FALCON 49") # can make header in CSV file the keys of the hashes
+    path = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district = repository.find_by_name("FALCON 49") 
     assert_equal 0.153, district.economic_profile.free_or_reduced_lunch_in_year(2004)
   end
 

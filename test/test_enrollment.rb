@@ -124,13 +124,6 @@ class TestEnrollment < Minitest::Test
     assert_equal ({2007 => 0.160, 2008 => 0.153, 2009 => 0.146, 2010 => 0.140, 2011 => 0.130, 2012 => 0.126, 2013 => 0.131, 2014 => 0.125}), district.enrollment.participation_by_race_or_ethnicity(:white)
   end
 
-  # def test_it_finds_participation_by_race_in_year
-  #   path = File.expand_path("../data", __dir__)
-  #   repository = DistrictRepository.from_csv(path)
-  #   district = repository.find_by_name("Colorado")
-  #   assert_equal ({:native_american => 0.010, :asian => 0.034, :black => 0.060, :hispanic => 0.280, :white => 0.610, :pacific_islander => 0.000, :two_or_more => 0.00}), district.enrollment.participation_by_race_or_ethnicity_in_year(2007)
-  # end
-
   def test_it_finds_special_education_by_year
     path = File.expand_path("../data", __dir__)
     repository = DistrictRepository.from_csv(path)
