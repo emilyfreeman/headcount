@@ -15,6 +15,18 @@ class EconomicProfile
     str.to_s[0..4].to_f
   end
 
+  def find_number_by_year(file_name)
+    parsed_file = parse_method_file(file_name)
+    years = find_year_range(file_name)
+    final = {}
+    parsed_file.map{|row|
+      if years.include?(row[:timeframe].to_i)
+        final[row[:timeframe].to_i] = row[:data].to_i
+      end
+    }
+    final
+  end
+
   def free_or_reduced_lunch_by_year
     filename = "Students qualifying for free or reduced price lunch.csv"
     parsed_file = parse_method_file(filename)
@@ -27,6 +39,23 @@ class EconomicProfile
     data
   end
 
+  def find_year_range(filename)
+    parsed_file = parse_method_file(filename)
+    years = parsed_file.map{|row| row.fetch(:timeframe).to_i}.uniq
+  end
+
+  def find_rate_by_year(file_name)
+    parsed_file = parse_method_file(file_name)
+    years = find_year_range(file_name)
+    final = {}
+    parsed_file.map{|row|
+      if years.include?(row[:timeframe].to_i) && row.fetch(:dataformat) == "Percent"
+        final[row[:timeframe].to_i] = truncate_floats(row[:data])
+      end
+    }
+    final.sort.to_h
+  end
+
   def free_or_reduced_lunch_in_year(year)
     if free_or_reduced_lunch_by_year[year]
       free_or_reduced_lunch_by_year.fetch(year)
@@ -36,15 +65,7 @@ class EconomicProfile
   end
 
   def school_aged_children_in_poverty_by_year
-    filename = "School-aged children in poverty.csv"
-    parsed_file = parse_method_file(filename)
-    data = {}
-    parsed_file.each do |row|
-      if row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
-      end
-    end
-    data
+    find_rate_by_year("School-aged children in poverty.csv")
   end
 
   def school_aged_children_in_poverty_in_year(year)
@@ -56,15 +77,7 @@ class EconomicProfile
   end
 
   def title_1_students_by_year
-    filename = "Title I students.csv"
-    parsed_file = parse_method_file(filename)
-    data = {}
-    parsed_file.each do |row|
-      if row.fetch(:dataformat) == "Percent"
-        data[row.fetch(:timeframe).to_i] = truncate_floats(row[:data])
-      end
-    end
-    data
+    find_rate_by_year("Title I students.csv")
   end
 
   def title_1_students_in_year(year)
@@ -76,13 +89,7 @@ class EconomicProfile
   end
 
   def median_income_by_year
-    filename = "Median household income.csv"
-    parsed_file = parse_method_file(filename)
-    data = {}
-    parsed_file.each do |row|
-        data[row.fetch(:timeframe).to_i] = row[:data].to_i
-    end
-    data
+    find_number_by_year("Median household income.csv")
   end
 
 end
