@@ -46,6 +46,15 @@ class DistrictRepository
   def self.repository_holder
     @repository
 
+
   end
 
+  def self.path
+    set_path('../data')
+    File.expand_path(@path, __dir__)
+  end
+
+  def self.set_path(path)
+    @path = path
+  end
 end

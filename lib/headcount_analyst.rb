@@ -31,7 +31,7 @@ class HeadcountAnalyst
     num.to_s[0..4].to_f
   end
 
-  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1)
+  def top_statewide_testing_year_over_year_growth(grade, subject=:all_subjects, top=1, weight = {})
     confirm_grade_data(grade)
     if subject != :all_subjects
       find_top_performers(grade, top, subject)
